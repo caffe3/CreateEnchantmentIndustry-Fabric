@@ -10,6 +10,10 @@ import com.tterrag.registrate.util.entry.FluidEntry;
 
 import javax.annotation.Nullable;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRenderHandler;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -17,6 +21,8 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributeHandler;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.EmptyItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.FullItemFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -26,11 +32,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluid;
+
 import plus.dragons.createdragonlib.fluid.FluidLavaReaction;
 import plus.dragons.createenchantmentindustry.EnchantmentIndustry;
 import plus.dragons.createenchantmentindustry.content.contraptions.fluids.experience.ExperienceFluid;
@@ -97,8 +106,11 @@ public class CeiFluids {
     public static final ResourceLocation INK_STILL_RL = EnchantmentIndustry.genRL("fluid/ink_still");
     public static final ResourceLocation INK_FLOW_RL = EnchantmentIndustry.genRL("fluid/ink_flow");
 
+	public static final ResourceLocation WATER_STILL = new ResourceLocation("minecraft", "block/water_still");
+	public static final ResourceLocation WATER_FLOW = new ResourceLocation("minecraft", "block/water_flow");
+
     public static final FluidEntry<SimpleFlowableFluid.Flowing> INK = REGISTRATE
-            .fluid("ink", INK_STILL_RL, INK_FLOW_RL)
+            .fluid("ink", WATER_STILL, WATER_FLOW)
 			.lang("Ink")
 			.fluidProperties(p -> p.levelDecreasePerBlock(2)
 					.tickRate(25)
@@ -133,6 +145,22 @@ public class CeiFluids {
 
     public static void register() {
     }
+
+	@Environment(EnvType.CLIENT)
+	public static void initRendering() {
+		InkFluidVariantRenderHandler handler = new InkFluidVariantRenderHandler();
+		var inkFluid = CeiFluids.INK.get();
+		FluidVariantRendering.register(inkFluid.getFlowing(), handler);
+		FluidVariantRendering.register(inkFluid.getSource(), handler);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static class InkFluidVariantRenderHandler implements FluidVariantRenderHandler {
+		@Override
+		public int getColor(FluidVariant fluidVariant, @Nullable BlockAndTintGetter view, @Nullable BlockPos blockPos) {
+			return 0xff000000;
+		}
+	}
 
     public static void handleInkEffect(ServerLevel world) {
 		for(var entity: world.getAllEntities()){
