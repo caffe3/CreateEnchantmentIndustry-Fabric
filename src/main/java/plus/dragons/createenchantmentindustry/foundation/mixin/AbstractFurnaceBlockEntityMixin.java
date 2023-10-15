@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
@@ -31,6 +32,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.jetbrains.annotations.NotNull;
 import plus.dragons.createenchantmentindustry.entry.CeiFluids;
+
+import plus.dragons.createenchantmentindustry.EnchantmentIndustry;
 
 import javax.annotation.Nullable;
 
@@ -52,16 +55,19 @@ abstract public class AbstractFurnaceBlockEntityMixin<T> extends BaseContainerBl
 
 		@Override
 		protected long getCapacity(FluidVariant variant) {
-			return java.lang.Long.MAX_VALUE;
+			return FluidConstants.BUCKET * 10;
+			//return java.lang.Long.MAX_VALUE;
 		}
 
 		@Override
 		protected boolean canInsert(FluidVariant variant) {
+			EnchantmentIndustry.LOGGER.debug("Furnace canInsert");
 			return false;
 		}
 
 		@Override
 		protected boolean canExtract(FluidVariant variant) {
+			EnchantmentIndustry.LOGGER.debug("Furnace canExtract");
 			return true;
 		}
 
@@ -72,6 +78,8 @@ abstract public class AbstractFurnaceBlockEntityMixin<T> extends BaseContainerBl
 
 		@Override
 		public long extract(FluidVariant extractedVariant, long maxAmount, TransactionContext transaction) {
+			EnchantmentIndustry.LOGGER.debug("Furnace XP extracting {}", maxAmount);
+
 			if (extractedVariant.isBlank() || maxAmount <= 0) {
 				return 0;
 			}
@@ -102,11 +110,15 @@ abstract public class AbstractFurnaceBlockEntityMixin<T> extends BaseContainerBl
 					result.addAndGet(((AbstractCookingRecipe) recipe).getExperience() * entry.getIntValue());
 				});
 			}
+			EnchantmentIndustry.LOGGER.debug("Furnace XP amount: {}", result.floatValue());
 			return (int)Math.floor(result.floatValue());
 		}
 
 		private long drain(long maxDrain) {
 			long total = getAmount();
+
+			EnchantmentIndustry.LOGGER.debug("Furnace XP draining {} from total of {}", maxDrain, total);
+
 			if (maxDrain <= total) {
 				recipesUsed.clear();
 			}
