@@ -39,6 +39,8 @@ import javax.annotation.Nullable;
 
 @Mixin(AbstractFurnaceBlockEntity.class)
 abstract public class AbstractFurnaceBlockEntityMixin<T> extends BaseContainerBlockEntity implements WorldlyContainer, RecipeHolder, StackedContentsCompatible, SidedStorageBlockEntity {
+	private static final FluidVariant EXPERIENCE = FluidVariant.of(CeiFluids.EXPERIENCE.getSource());
+
 	protected AbstractFurnaceBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
@@ -47,7 +49,13 @@ abstract public class AbstractFurnaceBlockEntityMixin<T> extends BaseContainerBl
 	private Object2IntOpenHashMap<ResourceLocation> recipesUsed;
 
 	@Unique
-	public final SingleVariantStorage<FluidVariant> experienceStorage = new SingleVariantStorage<>() {
+	public final SingleVariantStorage<FluidVariant> experienceStorage = new SingleVariantStorage<FluidVariant>() {
+		@Override
+		protected void onFinalCommit() {
+			EnchantmentIndustry.LOGGER.debug("Furnace XP onFinalCommit");
+			//markDirty();
+		}
+
 		@Override
 		protected FluidVariant getBlankVariant() {
 			return FluidVariant.blank();
@@ -55,20 +63,31 @@ abstract public class AbstractFurnaceBlockEntityMixin<T> extends BaseContainerBl
 
 		@Override
 		protected long getCapacity(FluidVariant variant) {
-			return FluidConstants.BUCKET * 10;
-			//return java.lang.Long.MAX_VALUE;
+			return java.lang.Long.MAX_VALUE;
+		}
+
+		@Override
+		public boolean isResourceBlank() {
+			EnchantmentIndustry.LOGGER.debug("Furnace XP isResourceBlank");
+			return getResource().isBlank();
+		}
+
+		@Override
+		public FluidVariant getResource() {
+			EnchantmentIndustry.LOGGER.debug("Furnace XP getResource");
+			return EXPERIENCE;
 		}
 
 		@Override
 		protected boolean canInsert(FluidVariant variant) {
-			EnchantmentIndustry.LOGGER.debug("Furnace canInsert");
+			EnchantmentIndustry.LOGGER.debug("Furnace XP canInsert");
 			return false;
 		}
 
 		@Override
 		protected boolean canExtract(FluidVariant variant) {
 			EnchantmentIndustry.LOGGER.debug("Furnace canExtract");
-			return true;
+			return (variant.equals(EXPERIENCE) && getAmount() > 0);
 		}
 
 		@Override
@@ -78,17 +97,20 @@ abstract public class AbstractFurnaceBlockEntityMixin<T> extends BaseContainerBl
 
 		@Override
 		public long extract(FluidVariant extractedVariant, long maxAmount, TransactionContext transaction) {
-			EnchantmentIndustry.LOGGER.debug("Furnace XP extracting {}", maxAmount);
+			var extractedFluid = extractedVariant.getFluid();
+			EnchantmentIndustry.LOGGER.debug("Furnace XP extracting {} of {}", maxAmount, extractedFluid.getClass().getSimpleName());
 
 			if (extractedVariant.isBlank() || maxAmount <= 0) {
+				EnchantmentIndustry.LOGGER.debug("Furnace XP extracting nowt");
 				return 0;
 			}
 
-			if (extractedVariant.equals(variant) && canExtract(extractedVariant)) {
+			if (canExtract(extractedVariant)) {
 				long extractedAmount = Math.min(maxAmount, getAmount());
+				EnchantmentIndustry.LOGGER.debug("Furnace XP extracting");
 
 				if (extractedAmount > 0) {
-					updateSnapshots(transaction);
+					//updateSnapshots(transaction);
 					extractedAmount = drain(extractedAmount);
 
 					if (getAmount() == 0) {
