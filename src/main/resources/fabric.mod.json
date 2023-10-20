@@ -18,6 +18,9 @@
     "main": [
       "plus.dragons.createenchantmentindustry.EnchantmentIndustry"
     ],
+    "modmenu": [
+      "plus.dragons.createenchantmentindustry.EnchantmentIndustryModMenu"
+    ],
     "client": [
       "plus.dragons.createenchantmentindustry.EnchantmentIndustryClient"
     ],
@@ -37,5 +40,12 @@
   },
   "recommends": {
     "create": "${create_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "parent": {
+        "id": "create"
+      }
+    }
   }
 }

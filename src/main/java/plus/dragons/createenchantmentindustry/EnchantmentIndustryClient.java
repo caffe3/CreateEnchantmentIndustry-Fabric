@@ -7,6 +7,7 @@ import plus.dragons.createenchantmentindustry.entry.CeiBlockPartials;
 import plus.dragons.createenchantmentindustry.foundation.config.CeiConfigs;
 import plus.dragons.createenchantmentindustry.foundation.events.ClientEvents;
 import plus.dragons.createenchantmentindustry.foundation.ponder.content.CeiPonderIndex;
+
 public class EnchantmentIndustryClient implements ClientModInitializer {
 
 	@Override
@@ -15,11 +16,6 @@ public class EnchantmentIndustryClient implements ClientModInitializer {
 
 		CeiPonderIndex.register();
 		CeiPonderIndex.registerTags();
-
-		BaseConfigScreen.setDefaultActionFor(EnchantmentIndustry.ID, screen -> screen
-				.withTitles(null, null, "Gameplay Settings")
-				.withSpecs(null, null, CeiConfigs.SERVER_SPEC)
-		);
 
 		ClientEvents.register();
 	}

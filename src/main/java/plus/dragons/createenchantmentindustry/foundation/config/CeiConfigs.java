@@ -1,6 +1,5 @@
 package plus.dragons.createenchantmentindustry.foundation.config;
 
-
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -10,20 +9,31 @@ import fuzs.forgeconfigapiport.api.config.v2.ModConfigEvents;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.foundation.config.ConfigBase;
+import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+
 import plus.dragons.createenchantmentindustry.EnchantmentIndustry;
 
 public class CeiConfigs {
 
-    public static CeiServerConfig SERVER;
-    public static ForgeConfigSpec SERVER_SPEC;
 	private static final Map<ModConfig.Type, ConfigBase> CONFIGS = new EnumMap<>(ModConfig.Type.class);
 
-	public static CeiServerConfig server() {
-		return SERVER;
+	private static CClient client;
+	private static CServer server;
+
+	public static CClient client() {
+		return client;
+	}
+
+	public static CServer server() {
+		return server;
 	}
 
 	private static <T extends ConfigBase> T register(Supplier<T> factory, ModConfig.Type side) {
@@ -40,7 +50,8 @@ public class CeiConfigs {
 	}
 
 	public static void register() {
-		SERVER = register(CeiServerConfig::new, ModConfig.Type.SERVER);
+		client = register(CClient::new, ModConfig.Type.CLIENT);
+		server = register(CServer::new, ModConfig.Type.SERVER);
 
 		for (Map.Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
 			ForgeConfigRegistry.INSTANCE.register(EnchantmentIndustry.ID, pair.getKey(), pair.getValue().specification);
@@ -63,4 +74,15 @@ public class CeiConfigs {
 				config.onReload();
 	}
 
+	public static BaseConfigScreen createConfigScreen(Screen parent) {
+		BaseConfigScreen.setDefaultActionFor(EnchantmentIndustry.ID, (base) ->
+				base.withSpecs(client.specification, null, server.specification)
+						.withTitles("Client Config", null, "Server Config")
+		);
+		return new BaseConfigScreen(parent, EnchantmentIndustry.ID);
+	}
+
+	public static BaseConfigScreen createConfigScreen(@Nullable Minecraft mc, Screen parent) {
+		return createConfigScreen(parent);
+	}
 }

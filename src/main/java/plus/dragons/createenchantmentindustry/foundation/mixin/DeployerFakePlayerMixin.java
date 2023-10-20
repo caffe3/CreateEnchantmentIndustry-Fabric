@@ -22,7 +22,7 @@ public class DeployerFakePlayerMixin {
 		if (player instanceof DeployerFakePlayer FakePlayer){
 			int xp = i;
 			if (xp <= 0) return;
-			if (FakePlayer.getRandom().nextFloat() > CeiConfigs.SERVER.deployerXpDropChance.getF())
+			if (FakePlayer.getRandom().nextFloat() > CeiConfigs.server().deployerXpDropChance.getF())
 				return;
 			int amount = xp / 3 + (FakePlayer.getRandom().nextInt(3) < xp % 3 ? 1 : 0);
 			if (amount <= 0) return;

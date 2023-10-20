@@ -127,7 +127,7 @@ public class BlazeEnchanterBlockEntity extends SmartBlockEntity implements IHave
                 .setInsertionHandler(this::tryInsertingFromSide));
         behaviours.add(internalTank = FilteringFluidTankBehaviour
                 .single(fluidVariant -> fluidVariant.getFluid().is(CeiTags.FluidTag.BLAZE_ENCHANTER_INPUT.tag),
-                    this, CeiConfigs.SERVER.blazeEnchanterTankCapacity.get() * UNIT_PER_MB)
+                    this, CeiConfigs.server().blazeEnchanterTankCapacity.get() * UNIT_PER_MB)
                 .whenFluidUpdates(() -> {
                     var fluid = internalTank.getPrimaryHandler().getFluid().getFluid();
                     if (CeiFluids.EXPERIENCE.is(fluid))
@@ -383,8 +383,8 @@ public class BlazeEnchanterBlockEntity extends SmartBlockEntity implements IHave
                 ? CeiFluids.HYPER_EXPERIENCE.get().getSource()
                 : CeiFluids.EXPERIENCE.get().getSource(),
                 (long) (Enchanting.getExperienceConsumption(entry.getFirst(), entry.getSecond()) *
-                        (hyper? CeiConfigs.SERVER.hyperEnchantByBlazeEnchanterCostCoefficient.get():
-                                CeiConfigs.SERVER.enchantByBlazeEnchanterCostCoefficient.get()))
+                        (hyper? CeiConfigs.server().hyperEnchantByBlazeEnchanterCostCoefficient.get():
+                                CeiConfigs.server().enchantByBlazeEnchanterCostCoefficient.get()))
         );
 
         if (processingTicks > 5) {
@@ -555,9 +555,9 @@ public class BlazeEnchanterBlockEntity extends SmartBlockEntity implements IHave
                             .withStyle(ChatFormatting.RED));
                 else {
                     int consumption = (int) (Enchanting.getExperienceConsumption(entry.getFirst(), entry.getSecond()) *
-                            (hyper()? CeiConfigs.SERVER.hyperEnchantByBlazeEnchanterCostCoefficient.get():
-                                    CeiConfigs.SERVER.enchantByBlazeEnchanterCostCoefficient.get()));
-                    if (consumption > CeiConfigs.SERVER.blazeEnchanterTankCapacity.get() * UNIT_PER_MB)
+                            (hyper()? CeiConfigs.server().hyperEnchantByBlazeEnchanterCostCoefficient.get():
+                                    CeiConfigs.server().enchantByBlazeEnchanterCostCoefficient.get()));
+                    if (consumption > CeiConfigs.server().blazeEnchanterTankCapacity.get() * UNIT_PER_MB)
                         tooltip.add(Component.literal("     ").append(LANG.translate("gui.goggles.too_expensive")
                                         .component())
                                 .withStyle(ChatFormatting.RED));

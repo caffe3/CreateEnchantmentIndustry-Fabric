@@ -95,7 +95,7 @@ public class PrinterBlockEntity extends SmartBlockEntity implements IHaveGoggleI
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         behaviours.add(tank = FilteringFluidTankBehaviour
             .single(fluidStack -> fluidStack.getFluid().is(CeiTags.FluidTag.PRINTER_INPUT.tag),
-                this, CeiConfigs.SERVER.copierTankCapacity.get() * UNIT_PER_MB));
+                this, CeiConfigs.server().copierTankCapacity.get() * UNIT_PER_MB));
         behaviours.add(beltProcessing = new BeltProcessingBehaviour(this).whenItemEnters(this::onItemReceived)
                 .whileItemHeld(this::whenItemHeld));
         registerAwardables(behaviours,
@@ -127,7 +127,7 @@ public class PrinterBlockEntity extends SmartBlockEntity implements IHaveGoggleI
         else {
             this.copyTarget = copyTarget;
             matchPrintEntry(copyTarget);
-            tooExpensive = Printing.isTooExpensive(printEntry, copyTarget, CeiConfigs.SERVER.copierTankCapacity.get() * UNIT_PER_MB);
+            tooExpensive = Printing.isTooExpensive(printEntry, copyTarget, CeiConfigs.server().copierTankCapacity.get() * UNIT_PER_MB);
         }
         processingTicks = -1;
         notifyUpdate();

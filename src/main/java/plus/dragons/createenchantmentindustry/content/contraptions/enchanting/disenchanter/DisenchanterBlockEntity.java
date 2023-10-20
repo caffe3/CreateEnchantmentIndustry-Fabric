@@ -95,7 +95,7 @@ public class DisenchanterBlockEntity extends SmartBlockEntity implements IHaveGo
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         behaviours.add(new DirectBeltInputBehaviour(this).allowingBeltFunnels()
                 .setInsertionHandler(this::tryInsertingFromSide));
-        behaviours.add(internalTank = SmartFluidTankBehaviour.single(this, (long) CeiConfigs.SERVER.disenchanterTankCapacity.get() * UNIT_PER_MB)
+        behaviours.add(internalTank = SmartFluidTankBehaviour.single(this, (long) CeiConfigs.server().disenchanterTankCapacity.get() * UNIT_PER_MB)
                 .allowExtraction()
                 .forbidInsertion());
 		internalTank.getPrimaryHandler().setValidator(fluidStack -> true);

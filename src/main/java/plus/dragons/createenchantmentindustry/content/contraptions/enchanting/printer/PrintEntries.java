@@ -61,8 +61,8 @@ public class PrintEntries {
         public int requiredInkAmount(ItemStack target) {
             return (int) (getExperienceFromItem(target) *
                     (requiredInkType(target).isSame(CeiFluids.HYPER_EXPERIENCE.get())?
-                    CeiConfigs.SERVER.copyEnchantedBookWithHyperExperienceCostCoefficient.get():
-                    CeiConfigs.SERVER.copyEnchantedBookCostCoefficient.get()));
+                    CeiConfigs.server().copyEnchantedBookWithHyperExperienceCostCoefficient.get():
+                    CeiConfigs.server().copyEnchantedBookCostCoefficient.get()));
         }
 
         @Override
@@ -77,15 +77,15 @@ public class PrintEntries {
         @Override
         public boolean isTooExpensive(ItemStack target, int limit) {
             return (int) (getExperienceFromItem(target) * (requiredInkType(target).isSame(CeiFluids.HYPER_EXPERIENCE.get())?
-                    CeiConfigs.SERVER.copyEnchantedBookWithHyperExperienceCostCoefficient.get():
-                    CeiConfigs.SERVER.copyEnchantedBookCostCoefficient.get())) > limit;
+                    CeiConfigs.server().copyEnchantedBookWithHyperExperienceCostCoefficient.get():
+                    CeiConfigs.server().copyEnchantedBookCostCoefficient.get())) > limit;
         }
 
         @Override
         public void addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking, ItemStack target) {
             var b = LANG.itemName(target).style(ChatFormatting.LIGHT_PURPLE);
             b.forGoggles(tooltip, 1);
-            boolean tooExpensive = Printing.isTooExpensive(this, target, CeiConfigs.SERVER.copierTankCapacity.get() * UNIT_PER_MB);
+            boolean tooExpensive = Printing.isTooExpensive(this, target, CeiConfigs.server().copierTankCapacity.get() * UNIT_PER_MB);
             if (tooExpensive)
                 tooltip.add(Component.literal("     ").append(LANG.translate(
                         "gui.goggles.too_expensive").component()
@@ -99,8 +99,8 @@ public class PrintEntries {
                 tooltip.add(Component.literal("     ").append(LANG.translate(
                         hyper ? "gui.goggles.hyper_xp_consumption": "gui.goggles.xp_consumption",
                         String.valueOf((int) (getExperienceFromItem(target) * (requiredInkType(target).isSame(CeiFluids.HYPER_EXPERIENCE.get())?
-                                CeiConfigs.SERVER.copyEnchantedBookWithHyperExperienceCostCoefficient.get():
-                                CeiConfigs.SERVER.copyEnchantedBookCostCoefficient.get()) / UNIT_PER_MB))).component()
+                                CeiConfigs.server().copyEnchantedBookWithHyperExperienceCostCoefficient.get():
+                                CeiConfigs.server().copyEnchantedBookCostCoefficient.get()) / UNIT_PER_MB))).component()
                 ).withStyle(hyper? ChatFormatting.AQUA: ChatFormatting.GREEN));
             }
             var map = EnchantmentHelper.getEnchantments(target);
@@ -148,7 +148,7 @@ public class PrintEntries {
 
         @Override
         public int requiredInkAmount(ItemStack target) {
-            return WrittenBookItem.getPageCount(target) * CeiConfigs.SERVER.copyWrittenBookCostPerPage.get() * UNIT_PER_MB;
+            return WrittenBookItem.getPageCount(target) * CeiConfigs.server().copyWrittenBookCostPerPage.get() * UNIT_PER_MB;
         }
 
         @Override
@@ -159,7 +159,7 @@ public class PrintEntries {
         @Override
         public ItemStack print(ItemStack target, ItemStack material) {
             var ret = target.copy();
-            if(CeiConfigs.SERVER.copyingWrittenBookAlwaysGetOriginalVersion.get())
+            if(CeiConfigs.server().copyingWrittenBookAlwaysGetOriginalVersion.get())
                 target.getOrCreateTag().putInt("generation", 0);
             else target.getOrCreateTag().putInt("generation", 1);
             return ret;
@@ -167,7 +167,7 @@ public class PrintEntries {
 
         @Override
         public boolean isTooExpensive(ItemStack target, int limit) {
-            return WrittenBookItem.getPageCount(target) * CeiConfigs.SERVER.copyWrittenBookCostPerPage.get() * UNIT_PER_MB > limit;
+            return WrittenBookItem.getPageCount(target) * CeiConfigs.server().copyWrittenBookCostPerPage.get() * UNIT_PER_MB > limit;
         }
 
         @Override
@@ -182,14 +182,14 @@ public class PrintEntries {
                             .add(page == 1 ? LANG.translate("generic.unit.page") : LANG.translate("generic.unit.pages"))
                             .style(ChatFormatting.DARK_GRAY));
             b.forGoggles(tooltip, 1);
-            if (Printing.isTooExpensive(this, target, CeiConfigs.SERVER.copierTankCapacity.get() * UNIT_PER_MB))
+            if (Printing.isTooExpensive(this, target, CeiConfigs.server().copierTankCapacity.get() * UNIT_PER_MB))
                 tooltip.add(Component.literal("     ").append(LANG.translate(
                         "gui.goggles.too_expensive").component()
                 ).withStyle(ChatFormatting.RED));
             else
                 tooltip.add(Component.literal("     ").append(LANG.translate(
                         "gui.goggles.ink_consumption",
-                        String.valueOf(CeiConfigs.SERVER.copyWrittenBookCostPerPage.get() * page)).component()
+                        String.valueOf(CeiConfigs.server().copyWrittenBookCostPerPage.get() * page)).component()
                 ).withStyle(ChatFormatting.DARK_GRAY));
         }
 
@@ -224,7 +224,7 @@ public class PrintEntries {
 
         @Override
         public int requiredInkAmount(ItemStack target) {
-            return CeiConfigs.SERVER.copyNameTagCost.get() * UNIT_PER_MB;
+            return CeiConfigs.server().copyNameTagCost.get() * UNIT_PER_MB;
         }
 
         @Override
@@ -236,7 +236,7 @@ public class PrintEntries {
 
         @Override
         public boolean isTooExpensive(ItemStack target, int limit) {
-            return CeiConfigs.SERVER.copyNameTagCost.get() * UNIT_PER_MB > limit;
+            return CeiConfigs.server().copyNameTagCost.get() * UNIT_PER_MB > limit;
         }
 
         @Override
@@ -247,7 +247,7 @@ public class PrintEntries {
                     .add(LANG.itemName(target)
                             .style(ChatFormatting.GREEN));
             b.forGoggles(tooltip, 1);
-            boolean tooExpensive = Printing.isTooExpensive(this, target, CeiConfigs.SERVER.copierTankCapacity.get() * UNIT_PER_MB);
+            boolean tooExpensive = Printing.isTooExpensive(this, target, CeiConfigs.server().copierTankCapacity.get() * UNIT_PER_MB);
             if (tooExpensive)
                 tooltip.add(Component.literal("     ").append(LANG.translate(
                         "gui.goggles.too_expensive").component()
@@ -255,7 +255,7 @@ public class PrintEntries {
             else
                 tooltip.add(Component.literal("     ").append(LANG.translate(
                         "gui.goggles.xp_consumption",
-                        String.valueOf(CeiConfigs.SERVER.copyNameTagCost.get())).component()
+                        String.valueOf(CeiConfigs.server().copyNameTagCost.get())).component()
                 ).withStyle(ChatFormatting.GREEN));
         }
 
@@ -287,7 +287,7 @@ public class PrintEntries {
 
 		@Override
 		public int requiredInkAmount(ItemStack target) {
-			return CeiConfigs.SERVER.copyTrainScheduleCost.get() * UNIT_PER_MB;
+			return CeiConfigs.server().copyTrainScheduleCost.get() * UNIT_PER_MB;
 		}
 
 		@Override
@@ -297,14 +297,14 @@ public class PrintEntries {
 
 		@Override
 		public boolean isTooExpensive(ItemStack target, int limit) {
-			return CeiConfigs.SERVER.copyTrainScheduleCost.get() * UNIT_PER_MB > limit;
+			return CeiConfigs.server().copyTrainScheduleCost.get() * UNIT_PER_MB > limit;
 		}
 
 		@Override
 		public void addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking, ItemStack target) {
 			var b = LANG.itemName(target).style(ChatFormatting.BLUE);
 			b.forGoggles(tooltip, 1);
-			boolean tooExpensive = Printing.isTooExpensive(this, target, CeiConfigs.SERVER.copierTankCapacity.get() * UNIT_PER_MB);
+			boolean tooExpensive = Printing.isTooExpensive(this, target, CeiConfigs.server().copierTankCapacity.get() * UNIT_PER_MB);
 			if (tooExpensive)
 				tooltip.add(Component.literal("     ").append(LANG.translate(
 						"gui.goggles.too_expensive").component()
@@ -312,7 +312,7 @@ public class PrintEntries {
 			else
 				tooltip.add(Component.literal("     ").append(LANG.translate(
 						"gui.goggles.ink_consumption",
-						String.valueOf(CeiConfigs.SERVER.copyTrainScheduleCost.get())).component()
+						String.valueOf(CeiConfigs.server().copyTrainScheduleCost.get())).component()
 				).withStyle(ChatFormatting.DARK_GRAY));
 		}
 
@@ -341,7 +341,7 @@ public class PrintEntries {
 
 		@Override
 		public int requiredInkAmount(ItemStack target) {
-			return CeiConfigs.SERVER.copyClipboardCost.get() * UNIT_PER_MB;
+			return CeiConfigs.server().copyClipboardCost.get() * UNIT_PER_MB;
 		}
 
 		@Override
@@ -351,14 +351,14 @@ public class PrintEntries {
 
 		@Override
 		public boolean isTooExpensive(ItemStack target, int limit) {
-			return CeiConfigs.SERVER.copyClipboardCost.get() * UNIT_PER_MB > limit;
+			return CeiConfigs.server().copyClipboardCost.get() * UNIT_PER_MB > limit;
 		}
 
 		@Override
 		public void addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking, ItemStack target) {
 			var b = LANG.itemName(target).style(ChatFormatting.BLUE);
 			b.forGoggles(tooltip, 1);
-			boolean tooExpensive = Printing.isTooExpensive(this, target, CeiConfigs.SERVER.copierTankCapacity.get() * UNIT_PER_MB);
+			boolean tooExpensive = Printing.isTooExpensive(this, target, CeiConfigs.server().copierTankCapacity.get() * UNIT_PER_MB);
 			if (tooExpensive)
 				tooltip.add(Component.literal("     ").append(LANG.translate(
 						"gui.goggles.too_expensive").component()
@@ -366,7 +366,7 @@ public class PrintEntries {
 			else
 				tooltip.add(Component.literal("     ").append(LANG.translate(
 						"gui.goggles.ink_consumption",
-						String.valueOf(CeiConfigs.SERVER.copyClipboardCost.get())).component()
+						String.valueOf(CeiConfigs.server().copyClipboardCost.get())).component()
 				).withStyle(ChatFormatting.DARK_GRAY));
 		}
 
