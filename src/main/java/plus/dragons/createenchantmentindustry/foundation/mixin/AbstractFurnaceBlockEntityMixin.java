@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -80,6 +81,11 @@ abstract public class AbstractFurnaceBlockEntityMixin<T> extends BaseContainerBl
 
 	@Unique
 	protected final FluidTank internalTank = new FluidTank(java.lang.Long.MAX_VALUE, fs -> fs.getType().equals(EXPERIENCE)) {
+		@Override
+		public boolean canExtract(FluidVariant extractedVariant) {
+			return super.canExtract(extractedVariant) && (getFluidAmount() >= UNIT_PER_MB);
+		}
+
 		@Override
 		protected void onContentsChanged() {
 			long total = calculateExperienceStored();
