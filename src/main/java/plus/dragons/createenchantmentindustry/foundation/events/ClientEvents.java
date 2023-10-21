@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.FogRenderer;
 import io.github.fabricators_of_create.porting_lib.event.client.FogEvents;
 import io.github.fabricators_of_create.porting_lib.event.client.FogEvents.ColorData;
 
+import plus.dragons.createenchantmentindustry.EnchantmentIndustry;
 import plus.dragons.createenchantmentindustry.entry.CeiFluids;
 import plus.dragons.createenchantmentindustry.foundation.config.CeiConfigs;
 
@@ -38,6 +39,7 @@ public class ClientEvents {
 		if (CeiFluids.INK.get()
 			.isSame(fluid)) {
 			fogData.scaleFarPlaneDistance(1f / 8f * CeiConfigs.client().inkTransparencyMultiplier.getF());
+			EnchantmentIndustry.LOGGER.debug("ink fogType: {}", type.name());
 			return true;
 		}
 
@@ -56,9 +58,9 @@ public class ClientEvents {
 
 		if (CeiFluids.INK.get()
 			.isSame(fluid)) {
-			event.setRed(0 / 255f);
-			event.setGreen(0 / 255f);
-			event.setBlue(0 / 255f);
+			event.setRed(7f / 255f);
+			event.setGreen(0f / 255f);
+			event.setBlue(31f / 255f);
 			return;
 		}
 	}
