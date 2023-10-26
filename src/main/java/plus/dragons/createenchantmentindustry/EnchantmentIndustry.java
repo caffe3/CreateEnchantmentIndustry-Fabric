@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator.Pack;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.resources.ResourceLocation;
 import plus.dragons.createdragonlib.advancement.AdvancementFactory;
@@ -31,6 +32,11 @@ import plus.dragons.createenchantmentindustry.entry.CeiTags;
 import plus.dragons.createenchantmentindustry.foundation.advancement.CeiAdvancements;
 import plus.dragons.createenchantmentindustry.foundation.config.CeiConfigs;
 import plus.dragons.createenchantmentindustry.foundation.ponder.content.CeiPonderIndex;
+import plus.dragons.createenchantmentindustry.foundation.data.recipe.CompactingRecipeGen;
+import plus.dragons.createenchantmentindustry.foundation.data.recipe.DisenchantingRecipeGen;
+import plus.dragons.createenchantmentindustry.foundation.data.recipe.EmptyingRecipeGen;
+import plus.dragons.createenchantmentindustry.foundation.data.recipe.FillingRecipeGen;
+import plus.dragons.createenchantmentindustry.foundation.data.recipe.MixingRecipeGen;
 
 public class EnchantmentIndustry implements ModInitializer {
 	public static final int UNIT_PER_MB = (int) (BUCKET / 1000);
@@ -80,13 +86,18 @@ public class EnchantmentIndustry implements ModInitializer {
 		CeiPackets.getChannel().initServerListener();
 	}
 
-	public static void gatherData(FabricDataGenerator gen, ExistingFileHelper helper) {
-		ADVANCEMENT_FACTORY.datagen(gen);
+	public static void gatherData(Pack pack, ExistingFileHelper helper) {
+		ADVANCEMENT_FACTORY.datagen(pack);
 		new TagGen.Builder()
 				.addItemTagFactory(CeiTags::genItemTag)
 				.addFluidTagFactory(CeiTags::genFluidTag)
 				.build().activate();
 		PonderLocalization.provideRegistrateLang(REGISTRATE);
-		LANG_FACTORY.datagen(gen);
+		LANG_FACTORY.datagen(pack);
+		pack.addProvider(CompactingRecipeGen::new);
+		pack.addProvider(DisenchantingRecipeGen::new);
+		pack.addProvider(EmptyingRecipeGen::new);
+		pack.addProvider(FillingRecipeGen::new);
+		pack.addProvider(MixingRecipeGen::new);
 	}
 }

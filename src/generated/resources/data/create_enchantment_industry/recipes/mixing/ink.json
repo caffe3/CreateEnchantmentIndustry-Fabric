@@ -5,15 +5,15 @@
       "tag": "create_enchantment_industry:ink_ingredient"
     },
     {
+      "amount": 20250,
       "fluid": "minecraft:water",
-      "nbt": {},
-      "amount": 250
+      "nbt": {}
     }
   ],
   "results": [
     {
-      "fluid": "create_enchantment_industry:ink",
-      "amount": 250
+      "amount": 20250,
+      "fluid": "create_enchantment_industry:ink"
     }
   ]
 }

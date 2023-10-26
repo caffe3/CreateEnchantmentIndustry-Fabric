@@ -10,8 +10,8 @@
       "item": "minecraft:golden_apple"
     },
     {
-      "fluid": "create_enchantment_industry:experience",
-      "amount": 100
+      "amount": 8100,
+      "fluid": "create_enchantment_industry:experience"
     }
   ]
 }

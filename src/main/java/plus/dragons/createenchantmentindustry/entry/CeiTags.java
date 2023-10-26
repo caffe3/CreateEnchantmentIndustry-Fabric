@@ -5,6 +5,9 @@ import static plus.dragons.createenchantmentindustry.EnchantmentIndustry.LANG;
 import java.util.Locale;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import com.simibubi.create.foundation.data.TagGen;
+
+import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,13 +15,14 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import plus.dragons.createenchantmentindustry.EnchantmentIndustry;
 
+import plus.dragons.createenchantmentindustry.EnchantmentIndustry;
 
 public class CeiTags {
     public static <T> TagKey<T> optionalTag(Registry<T> registry,
@@ -159,7 +163,6 @@ public class CeiTags {
     }
 
     public enum FluidTag {
-        //No experience fluid tag here as different ratios is not acceptable
         INK(NameSpace.COMMON),
         BLAZE_ENCHANTER_INPUT(false),
         PRINTER_INPUT(true);
@@ -212,15 +215,15 @@ public class CeiTags {
         FluidTag.init();
     }
 
-    public static void genFluidTag(RegistrateTagsProvider<Fluid> pov){
-		// FIXME BUGGY
-        //pov.tag(FluidTag.PRINTER_INPUT.tag).addTag(FluidTag.INK.tag);
-    }
+	public static void genFluidTag(RegistrateTagsProvider<Fluid> pov){
+		TagGen.CreateTagsProvider<Fluid> prov = new TagGen.CreateTagsProvider<>(pov, Fluid::builtInRegistryHolder);
+		prov.tag(FluidTag.PRINTER_INPUT.tag).addTag(FluidTag.INK.tag);
+	}
 
-    public static void genItemTag(RegistrateTagsProvider<Item> pov){
-		// FIXME BUGGY
-        //pov.tag(ItemTag.INK_INGREDIENT.tag).add(Items.BLACK_DYE, Items.WITHER_ROSE, Items.INK_SAC);
-        //pov.tag(ItemTag.UPRIGHT_ON_BELT.tag).add(Items.EXPERIENCE_BOTTLE);
-    }
+	public static void genItemTag(RegistrateTagsProvider<Item> pov){
+		TagGen.CreateTagsProvider<Item> prov = new TagGen.CreateTagsProvider<>(pov, Item::builtInRegistryHolder);
+		prov.tag(ItemTag.INK_INGREDIENT.tag).add(Items.BLACK_DYE, Items.WITHER_ROSE, Items.INK_SAC);
+		prov.tag(ItemTag.UPRIGHT_ON_BELT.tag).add(Items.EXPERIENCE_BOTTLE);
+	}
 
 }

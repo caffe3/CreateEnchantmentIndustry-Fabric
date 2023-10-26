@@ -3,6 +3,7 @@ package plus.dragons.createenchantmentindustry.entry;
 import static net.minecraft.world.item.Items.BUCKET;
 import static net.minecraft.world.item.Items.GLASS_BOTTLE;
 import static plus.dragons.createenchantmentindustry.EnchantmentIndustry.REGISTRATE;
+import static plus.dragons.createenchantmentindustry.EnchantmentIndustry.UNIT_PER_MB;
 
 import com.simibubi.create.AllCreativeModeTabs;
 import com.tterrag.registrate.fabric.SimpleFlowableFluid;
@@ -41,6 +42,9 @@ public class CeiFluids {
     static {
         REGISTRATE.useCreativeTab(AllCreativeModeTabs.MAIN_TAB.key());
     }
+
+	public static final int EXPERIENCE_BOTTLE_AMOUNT = 10 * UNIT_PER_MB;
+	public static final int HYPER_EXP_BOTTLE_AMOUNT = 10 * UNIT_PER_MB;
 
     public static final ResourceLocation EXPERIENCE_STILL_RL = EnchantmentIndustry.genRL("fluid/experience_still");
     public static final ResourceLocation EXPERIENCE_FLOW_RL = EnchantmentIndustry.genRL("fluid/experience_flow");
